@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MyWpfApp.Models;
+using MyWpfApp.Utilities;
 
 namespace MyWpfApp.ViewModels
 {

@@ -1,7 +1,8 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Input;
 using MyWpfApp.ViewModels;
+using MyWpfApp.Views;  // Добавляем директиву для Views
 
 namespace MyWpfApp
 {

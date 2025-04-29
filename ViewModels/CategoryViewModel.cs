@@ -1,37 +1,82 @@
-using System.Collections.ObjectModel;
 using MyWpfApp.Models;
+using MyWpfApp.Utilities;
+using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Input;
 
 namespace MyWpfApp.ViewModels
 {
-    /// <summary>
-    /// ViewModel для категории.
-    /// </summary>
     public class CategoryViewModel : BaseViewModel
     {
-        /// <summary>
-        /// Название категории.
-        /// </summary>
-        public string Name { get; set; }
+        private readonly Action _goBackAction;
+        private readonly string _categoryName;
 
-        /// <summary>
-        /// Описание категории.
-        /// </summary>
-        public string Description { get; set; }
+        public ObservableCollection<ApplicationItem> Applications { get; } = new();
+        public ApplicationItem SelectedApp { get; set; }
 
-        /// <summary>
-        /// Коллекция приложений, относящихся к категории.
-        /// </summary>
-        public ObservableCollection<ApplicationItem> Applications { get; set; }
+        public ICommand BackCommand { get; }
+        public ICommand LaunchCommand { get; }
 
-        /// <summary>
-        /// Конструктор.
-        /// </summary>
-        /// <param name="category">Модель категории.</param>
-        public CategoryViewModel(Category category)
+        public CategoryViewModel(string categoryName, Action goBackAction)
         {
-            Name = category.Name;
-            Description = category.Description;
-            Applications = new ObservableCollection<ApplicationItem>(category.Applications);
+            _categoryName = categoryName;
+            _goBackAction = goBackAction;
+
+            BackCommand = new RelayCommand(_ => _goBackAction?.Invoke());
+            LaunchCommand = new RelayCommand(_ => LaunchApplication());
+
+            LoadApplications();
+        }
+
+        private void LoadApplications()
+        {
+            try
+            {
+                Applications.Clear();
+
+                Applications.Add(new ApplicationItem(
+                    $"{_categoryName} - Блокнот",
+                    "notepad.exe",
+                    ApplicationType.Exe));
+
+                Applications.Add(new ApplicationItem(
+                    $"{_categoryName} - Google",
+                    "https://google.com",
+                    ApplicationType.Web));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LaunchApplication()
+        {
+            if (SelectedApp == null) return;
+
+            try
+            {
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = SelectedApp.Type == ApplicationType.Web
+                        ? SelectedApp.Path.StartsWith("http")
+                            ? SelectedApp.Path
+                            : $"http://{SelectedApp.Path}"
+                        : SelectedApp.Path,
+                    UseShellExecute = true
+                };
+
+                Process.Start(processInfo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка запуска: {ex.Message}",
+                              "Ошибка",
+                              MessageBoxButton.OK,
+                              MessageBoxImage.Error);
+            }
         }
     }
 }

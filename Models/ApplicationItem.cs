@@ -18,6 +18,11 @@ namespace MyWpfApp.Models
         public string Path { get; set; }
 
         /// <summary>
+        /// Тип приложения (EXE или Web).
+        /// </summary>
+        public ApplicationType Type { get; set; }
+
+        /// <summary>
         /// Иконка приложения (необязательная, может быть путь к изображению).
         /// </summary>
         public string IconPath { get; set; }
@@ -38,22 +43,42 @@ namespace MyWpfApp.Models
         public ApplicationItem()
         {
             DateAdded = DateTime.Now;
+            Type = ApplicationType.Exe;
         }
 
         /// <summary>
         /// Конструктор с параметрами.
         /// </summary>
-        /// <param name="name">Название приложения.</param>
-        /// <param name="path">Путь к приложению или веб-ссылке.</param>
-        /// <param name="iconPath">Путь к иконке приложения.</param>
-        /// <param name="description">Описание приложения.</param>
-        public ApplicationItem(string name, string path, string iconPath = null, string description = null)
+        /// <param name="name">Название приложения</param>
+        /// <param name="path">Путь к приложению</param>
+        /// <param name="type">Тип приложения</param>
+        /// <param name="iconPath">Путь к иконке</param>
+        /// <param name="description">Описание</param>
+        public ApplicationItem(
+            string name,
+            string path,
+            ApplicationType type = ApplicationType.Exe,
+            string iconPath = null,
+            string description = null)
         {
             Name = name;
             Path = path;
+            Type = type;
             IconPath = iconPath;
             Description = description;
             DateAdded = DateTime.Now;
         }
+    }
+
+    /// <summary>
+    /// Типы приложений
+    /// </summary>
+    public enum ApplicationType
+    {
+        /// <summary> Исполняемый файл </summary>
+        Exe,
+
+        /// <summary> Веб-приложение </summary>
+        Web
     }
 }

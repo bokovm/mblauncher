@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MyWpfApp.Models;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MyWpfApp
+namespace MyWpfApp.Views
 {
     public partial class CategoryView : UserControl
     {
@@ -23,17 +23,19 @@ namespace MyWpfApp
         {
             try
             {
-                var apps = new List<ApplicationItem>
+                var apps = new System.Collections.Generic.List<ApplicationItem>
                 {
                     new ApplicationItem
                     {
                         Name = $"{_categoryName} - Блокнот",
-                        Path = "notepad.exe"
+                        Path = "notepad.exe",
+                        Type = ApplicationType.Exe
                     },
                     new ApplicationItem
                     {
                         Name = $"{_categoryName} - Google",
-                        Path = "https://google.com"
+                        Path = "https://google.com",
+                        Type = ApplicationType.Web
                     }
                 };
 
@@ -42,47 +44,34 @@ namespace MyWpfApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки приложений: {ex.Message}",
-                              "Ошибка",
-                              MessageBoxButton.OK,
-                              MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка загрузки: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            BackAction?.Invoke();
-        }
+        private void BackButton_Click(object sender, RoutedEventArgs e) => BackAction?.Invoke();
 
-        public class ApplicationItem
+        private void OnLaunchClicked(object sender, RoutedEventArgs e)
         {
-            public string Name { get; set; }
-            public string Path { get; set; }
-        }
-
-        private void ApplicationsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
+            if (ApplicationsList.SelectedItem is ApplicationItem selectedItem)
             {
-                if (ApplicationsList.SelectedItem is ApplicationItem selectedItem)
+                try
                 {
                     Process.Start(new ProcessStartInfo
                     {
                         FileName = selectedItem.Path,
                         UseShellExecute = true
                     });
-
-                    // Сбрасываем выбор после запуска
-                    ApplicationsList.SelectedIndex = -1;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка запуска: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка запуска: {ex.Message}",
-                              "Ошибка",
-                              MessageBoxButton.OK,
-                              MessageBoxImage.Error);
-            }
+        }
+
+        private void ApplicationsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Обработка выбора элемента
         }
     }
 }
