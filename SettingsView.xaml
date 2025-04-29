@@ -1,0 +1,51 @@
+﻿<Window
+        x:Class="MyWpfApp.SettingsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Настройки" Height="400" Width="600"
+        WindowStartupLocation="CenterScreen"
+        Background="White">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Text="Настройки"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,10" Grid.Row="0" />
+
+        <!-- Основное содержимое -->
+        <StackPanel Grid.Row="1" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            <!-- Параметры -->
+            <StackPanel Orientation="Vertical" Margin="0,10">
+                <TextBlock Text="Включить уведомления:" FontSize="16" Margin="0,0,0,5" />
+                <CheckBox Content="Уведомления включены" IsChecked="True" FontSize="14" />
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Margin="0,10">
+                <TextBlock Text="Уровень громкости:" FontSize="16" Margin="0,0,0,5" />
+                <Slider Minimum="0" Maximum="100" Value="50" TickFrequency="10" IsSnapToTickEnabled="True" />
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Margin="0,10">
+                <TextBlock Text="Тема приложения:" FontSize="16" Margin="0,0,0,5" />
+                <ComboBox SelectedIndex="0" FontSize="14">
+                    <ComboBoxItem Content="Светлая" />
+                    <ComboBoxItem Content="Тёмная" />
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Кнопки -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,10">
+            <Button Content="Сохранить" Width="100" Margin="5" Click="SaveButton_Click" />
+            <Button Content="Отмена" Width="100" Margin="5" Click="CancelButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>
