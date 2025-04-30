@@ -57,12 +57,25 @@ namespace MyWpfApp
         {
             if (sender is Button button && DataContext is MainViewModel vm)
             {
-                var categoryName = button.Content.ToString();
-                var categoryView = new CategoryView(
-                    categoryName,
-                    () => vm.CurrentContent = _mainContent
-                );
-                vm.CurrentContent = categoryView;
+                var categoryName = button.Content?.ToString();
+                if (string.IsNullOrEmpty(categoryName))
+                {
+                    MessageBox.Show("Название категории не задано.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                try
+                {
+                    var categoryView = new CategoryView(
+                        categoryName,
+                        () => vm.CurrentContent = _mainContent
+                    );
+                    vm.CurrentContent = categoryView;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при открытии категории: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
     }

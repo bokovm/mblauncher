@@ -20,15 +20,25 @@ namespace MyWpfApp.Views
             {
                 try
                 {
-                    Process.Start(new ProcessStartInfo
+                    if (string.IsNullOrEmpty(selectedItem.Path))
                     {
-                        FileName = selectedItem.Path,
+                        MessageBox.Show("Путь к приложению не задан.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    var processInfo = new ProcessStartInfo
+                    {
+                        FileName = selectedItem.Type == ApplicationType.Web
+                            ? (selectedItem.Path.StartsWith("http") ? selectedItem.Path : $"http://{selectedItem.Path}")
+                            : selectedItem.Path,
                         UseShellExecute = true
-                    });
+                    };
+
+                    Process.Start(processInfo);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка запуска: {ex.Message}");
+                    MessageBox.Show($"Ошибка запуска: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
