@@ -1,5 +1,5 @@
 ﻿using MyWpfApp.Models;
-using System;
+using MyWpfApp.ViewModels;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,47 +8,11 @@ namespace MyWpfApp.Views
 {
     public partial class CategoryView : UserControl
     {
-        public Action BackAction { get; set; }
-        private readonly string _categoryName;
-
-        public CategoryView(string categoryName)
+        public CategoryView(string categoryName, Action backAction)
         {
-            InitializeComponent();
-            _categoryName = categoryName;
-            LoadApplications();
-            ApplicationsList.SelectionChanged += ApplicationsList_SelectionChanged;
+            InitializeComponent(); // Теперь метод доступен
+            DataContext = new CategoryViewModel(categoryName, backAction);
         }
-
-        private void LoadApplications()
-        {
-            try
-            {
-                var apps = new System.Collections.Generic.List<ApplicationItem>
-                {
-                    new ApplicationItem
-                    {
-                        Name = $"{_categoryName} - Блокнот",
-                        Path = "notepad.exe",
-                        Type = ApplicationType.Exe
-                    },
-                    new ApplicationItem
-                    {
-                        Name = $"{_categoryName} - Google",
-                        Path = "https://google.com",
-                        Type = ApplicationType.Web
-                    }
-                };
-
-                ApplicationsList.ItemsSource = apps;
-                ApplicationsList.SelectedIndex = -1;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка загрузки: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void BackButton_Click(object sender, RoutedEventArgs e) => BackAction?.Invoke();
 
         private void OnLaunchClicked(object sender, RoutedEventArgs e)
         {
@@ -64,14 +28,9 @@ namespace MyWpfApp.Views
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка запуска: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Ошибка запуска: {ex.Message}");
                 }
             }
-        }
-
-        private void ApplicationsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Обработка выбора элемента
         }
     }
 }

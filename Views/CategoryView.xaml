@@ -10,6 +10,15 @@
              d:DesignHeight="600" 
              d:DesignWidth="800">
 
+    <!-- Добавление ссылки на ресурсы приложения -->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MyWpfApp;component/App.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -40,7 +49,7 @@
                  Grid.Row="1"
                  Margin="20"
                  ItemsSource="{Binding Applications}"
-                 SelectedItem="{Binding SelectedApp}"
+                 SelectedItem="{Binding SelectedApp, Mode=TwoWay}"
                  SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:ApplicationItem}">
@@ -78,12 +87,11 @@
 
                             <!-- Кнопка запуска -->
                             <Button Grid.Row="2" 
-                                   Content="Запустить" 
-                                   Command="{Binding DataContext.LaunchCommand, 
-                                           RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                   Style="{StaticResource PrimaryButtonStyle}"
-                                   Margin="10"
-                                   HorizontalAlignment="Right"/>
+                                Content="Запустить" 
+                                Command="{Binding LaunchCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Margin="10"
+                                HorizontalAlignment="Right"/>
                         </Grid>
                     </Border>
                 </DataTemplate>

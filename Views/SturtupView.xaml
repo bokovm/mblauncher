@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="MyWpfApp.Views.StartupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:MyWpfApp.ViewModels">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="20,15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Кнопки категорий -->
+            <Button Content="Игры" 
+                  Grid.Row="0" Grid.Column="0" 
+                  Style="{StaticResource RoundedButtonStyle}"
+                  Command="{Binding OpenGamesCommand}"/>
+
+            <Button Content="Приложения" 
+                  Grid.Row="0" Grid.Column="1" 
+                  Style="{StaticResource RoundedButtonStyle}"
+                  Command="{Binding OpenAppsCommand}"/>
+
+            <Button Content="Браузеры" 
+                  Grid.Row="0" Grid.Column="2" 
+                  Style="{StaticResource RoundedButtonStyle}"
+                  Command="{Binding OpenBrowsersCommand}"/>
+
+            <Button Content="Другое" 
+                  Grid.Row="0" Grid.Column="3" 
+                  Style="{StaticResource RoundedButtonStyle}"
+                  Command="{Binding OpenOtherCommand}"/>
+
+            <Button Content="Видео" 
+                  Grid.Row="2" Grid.Column="0" 
+                  Style="{StaticResource RoundedButtonStyle}"
+                  Command="{Binding OpenVideosCommand}"/>
+
+            <Button Content="Музыка" 
+                  Grid.Row="2" Grid.Column="1" 
+                  Style="{StaticResource RoundedButtonStyle}"
+                  Command="{Binding OpenMusicCommand}"/>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

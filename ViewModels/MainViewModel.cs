@@ -1,37 +1,13 @@
-using MyWpfApp.Models;
+using MyWpfApp.Views;
 using MyWpfApp.Utilities;
-using System;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
 namespace MyWpfApp.ViewModels
 {
     public class MainViewModel : BaseViewModel
-    {
-        private WindowState _windowState;
-        private double _windowWidth;
-        private double _windowHeight;
-        private object _currentContent;
-        private object _mainContent;
-
-        public WindowState WindowState
-        {
-            get => _windowState;
-            set => SetProperty(ref _windowState, value);
-        }
-
-        public double WindowWidth
-        {
-            get => _windowWidth;
-            set => SetProperty(ref _windowWidth, value);
-        }
-
-        public double WindowHeight
-        {
-            get => _windowHeight;
-            set => SetProperty(ref _windowHeight, value);
-        }
+    {      
+        private object _currentContent;       
 
         public object CurrentContent
         {
@@ -49,9 +25,17 @@ namespace MyWpfApp.ViewModels
         public ICommand OpenMusicCommand { get; }
         public ICommand OpenSettingsCommand { get; }
 
+        private object _mainContent;
+
         public MainViewModel()
         {
-            ToggleFullScreenCommand = new RelayCommand(_ => ToggleFullScreen());
+            _mainContent = new StartupView();
+            CurrentContent = _mainContent;
+            ToggleFullScreenCommand = new RelayCommand(_ =>
+            {
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                mainWindow?.ToggleFullScreen();
+            });
             ExitCommand = new RelayCommand(_ => ExitApplication());
             OpenSettingsCommand = new RelayCommand(_ => OpenSettings());
 
@@ -62,24 +46,7 @@ namespace MyWpfApp.ViewModels
             OpenVideosCommand = new RelayCommand(_ => OpenCategory("Видео"));
             OpenMusicCommand = new RelayCommand(_ => OpenCategory("Музыка"));
 
-            _mainContent = new MainContent();
-            CurrentContent = _mainContent;
-
-            ConfigureWindowInitialState();
-        }
-
-        private void ConfigureWindowInitialState()
-        {
-            WindowState = WindowState.Normal;
-            WindowWidth = 900;
-            WindowHeight = 500;
-        }
-
-        private void ToggleFullScreen()
-        {
-            WindowState = WindowState == WindowState.Maximized
-                ? WindowState.Normal
-                : WindowState.Maximized;
+            CurrentContent = new StartupView();
         }
 
         private void ExitApplication()
@@ -89,18 +56,25 @@ namespace MyWpfApp.ViewModels
 
         private void OpenSettings()
         {
-            // Логика открытия настроек
+            var settingsWindow = new SettingsView();
+            settingsWindow.Owner = Application.Current.MainWindow;
+            settingsWindow.ShowDialog();
         }
 
         private void OpenCategory(string categoryName)
         {
-            var categoryVM = new CategoryViewModel(
-                categoryName,
-                () => CurrentContent = _mainContent
-            );
-            CurrentContent = categoryVM;
+            try
+            {
+                var categoryView = new CategoryView(
+            categoryName,
+            () => CurrentContent = _mainContent // Используем сохраненный контент
+        );
+                CurrentContent = categoryView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
-        public class MainContent { }
     }
 }

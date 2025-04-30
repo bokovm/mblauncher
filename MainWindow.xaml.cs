@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using MyWpfApp.ViewModels;
-using MyWpfApp.Views;  // Добавляем директиву для Views
+using MyWpfApp.Views;
 
 namespace MyWpfApp
 {
@@ -14,16 +14,15 @@ namespace MyWpfApp
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += OnWindowLoaded;
+            DataContext = new MainViewModel();
         }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            _mainContent = (UIElement)Content;
+            _mainContent = new StartupView();
             if (DataContext is MainViewModel vm)
             {
                 vm.CurrentContent = _mainContent;
-                EnterFullScreen();
             }
         }
 
@@ -33,28 +32,20 @@ namespace MyWpfApp
                 DragMove();
         }
 
-        private void ToggleFullScreen()
+        public void ToggleFullScreen()
         {
-            _isFullScreen = !_isFullScreen;
-            if (_isFullScreen) EnterFullScreen();
-            else ExitFullScreen();
-        }
-
-        private void EnterFullScreen()
-        {
-            WindowState = WindowState.Maximized;
-            WindowStyle = WindowStyle.None;
-            ResizeMode = ResizeMode.NoResize;
-        }
-
-        private void ExitFullScreen()
-        {
-            WindowState = WindowState.Normal;
-            WindowStyle = WindowStyle.SingleBorderWindow;
-            ResizeMode = ResizeMode.CanResize;
-            Width = 1200;
-            Height = 800;
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+                WindowStyle = WindowStyle.SingleBorderWindow;
+                Width = 900;
+                Height = 500;
+            }
+            else
+            {
+                WindowState = WindowState.Maximized;
+                WindowStyle = WindowStyle.None;
+            }
         }
 
         private void ExitApplication(object sender, RoutedEventArgs e)
@@ -67,10 +58,10 @@ namespace MyWpfApp
             if (sender is Button button && DataContext is MainViewModel vm)
             {
                 var categoryName = button.Content.ToString();
-                var categoryView = new CategoryView(categoryName)
-                {
-                    BackAction = () => vm.CurrentContent = _mainContent
-                };
+                var categoryView = new CategoryView(
+                    categoryName,
+                    () => vm.CurrentContent = _mainContent
+                );
                 vm.CurrentContent = categoryView;
             }
         }

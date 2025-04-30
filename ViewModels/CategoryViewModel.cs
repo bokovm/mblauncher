@@ -10,72 +10,68 @@ namespace MyWpfApp.ViewModels
 {
     public class CategoryViewModel : BaseViewModel
     {
-        private readonly Action _goBackAction;
-        private readonly string _categoryName;
-
-        public ObservableCollection<ApplicationItem> Applications { get; } = new();
+        public string CategoryName { get; }
         public ApplicationItem SelectedApp { get; set; }
 
         public ICommand BackCommand { get; }
         public ICommand LaunchCommand { get; }
 
-        public CategoryViewModel(string categoryName, Action goBackAction)
+        public ObservableCollection<ApplicationItem> Applications { get; } = new();
+
+        public CategoryViewModel(string categoryName, Action backAction)
         {
-            _categoryName = categoryName;
-            _goBackAction = goBackAction;
-
-            BackCommand = new RelayCommand(_ => _goBackAction?.Invoke());
-            LaunchCommand = new RelayCommand(_ => LaunchApplication());
-
-            LoadApplications();
+            LoadApplications(categoryName);
+        BackCommand = new RelayCommand(_ => backAction?.Invoke());
+        LaunchCommand = new RelayCommand(_ => LaunchApp());
         }
 
-        private void LoadApplications()
+        private void LoadApplications(string categoryName)
         {
             try
             {
                 Applications.Clear();
 
-                Applications.Add(new ApplicationItem(
-                    $"{_categoryName} - Блокнот",
-                    "notepad.exe",
-                    ApplicationType.Exe));
+                Applications.Add(new ApplicationItem
+                {
+                    Name = $"{categoryName} - Блокнот",
+                    Path = "notepad.exe",
+                    Type = ApplicationType.Exe
+                });
 
-                Applications.Add(new ApplicationItem(
-                    $"{_categoryName} - Google",
-                    "https://google.com",
-                    ApplicationType.Web));
+                Applications.Add(new ApplicationItem
+                {
+                    Name = $"{categoryName} - Google",
+                    Path = "https://google.com",
+                    Type = ApplicationType.Web
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка загрузки: {ex.Message}");
             }
         }
 
-        private void LaunchApplication()
+        private void LaunchApp()
         {
             if (SelectedApp == null) return;
 
+            string path = SelectedApp.Path;
+            if (SelectedApp.Type == ApplicationType.Web && !path.StartsWith("http"))
+            {
+                path = "http://" + path;
+            }
+
             try
             {
-                var processInfo = new ProcessStartInfo
+                Process.Start(new ProcessStartInfo
                 {
-                    FileName = SelectedApp.Type == ApplicationType.Web
-                        ? SelectedApp.Path.StartsWith("http")
-                            ? SelectedApp.Path
-                            : $"http://{SelectedApp.Path}"
-                        : SelectedApp.Path,
+                    FileName = path,
                     UseShellExecute = true
-                };
-
-                Process.Start(processInfo);
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка запуска: {ex.Message}",
-                              "Ошибка",
-                              MessageBoxButton.OK,
-                              MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
     }
