@@ -66,9 +66,9 @@ namespace MyWpfApp.ViewModels
             try
             {
                 var categoryView = new CategoryView(
-            categoryName,
-            () => CurrentContent = _mainContent // Используем сохраненный контент
-        );
+                    categoryName,
+                    () => CurrentContent = _mainContent ?? new StartupView()
+                );
                 CurrentContent = categoryView;
             }
             catch (Exception ex)

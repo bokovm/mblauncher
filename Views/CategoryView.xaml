@@ -88,7 +88,7 @@
                             <!-- Кнопка запуска -->
                             <Button Grid.Row="2" 
                                 Content="Запустить" 
-                                Command="{Binding LaunchCommand}"
+                                Command="{Binding DataContext.LaunchCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Margin="10"
                                 HorizontalAlignment="Right"/>

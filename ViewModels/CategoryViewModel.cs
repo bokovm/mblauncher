@@ -21,8 +21,8 @@ namespace MyWpfApp.ViewModels
         public CategoryViewModel(string categoryName, Action backAction)
         {
             LoadApplications(categoryName);
-        BackCommand = new RelayCommand(_ => backAction?.Invoke());
-        LaunchCommand = new RelayCommand(_ => LaunchApp());
+            BackCommand = new RelayCommand(_ => backAction?.Invoke());
+            LaunchCommand = new RelayCommand(_ => LaunchApp());
         }
 
         private void LoadApplications(string categoryName)
@@ -53,6 +53,12 @@ namespace MyWpfApp.ViewModels
 
         private void LaunchApp()
         {
+            if (SelectedApp == null)
+            {
+                MessageBox.Show("Выберите приложение для запуска.");
+                return;
+            }
+
             if (SelectedApp == null) return;
 
             string path = SelectedApp.Path;

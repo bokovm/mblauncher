@@ -12,12 +12,5 @@ public partial class App : Application
             MessageBox.Show(args.Exception.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             args.Handled = true;
         };
-
-        base.OnStartup(e);
-        DispatcherUnhandledException += (sender, args) =>
-        {
-            MessageBox.Show(args.Exception.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            args.Handled = true;
-        };
     }
 }

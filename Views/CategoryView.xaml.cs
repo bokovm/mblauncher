@@ -40,7 +40,7 @@ namespace MyWpfApp.Views
                 {
                     MessageBox.Show($"Ошибка запуска: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-            }
+            }   
         }
     }
 }
